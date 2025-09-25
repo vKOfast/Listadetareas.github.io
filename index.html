@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas</title>
+    <style>
+        /* Estilos básicos para que se vea ordenado */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #f3f3f3;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer; /* Para que se note que es editable */
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: red;
+        }
+        input.editando {
+            width: 80%;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Título principal -->
+    <h1>Lista de Tareas</h1>
+
+    <!-- Span que muestra el número de tareas, inicia en 0 -->
+    <p>Tareas actuales: <span id="contador">0</span></p>
+
+    <!-- Contenedor de la lista de tareas -->
+    <ul id="lista-tareas">
+        <!-- Aquí se agregarán las tareas dinámicamente -->
+    </ul>
+
+    <!-- Botón que llama a la función agregarTarea() al hacer clic -->
+    <button onclick="agregarTarea()">Agregar Tarea</button>
+
+    <script>
+        // Variable global que almacena el número de tareas actuales
+        let contador = 0;
+
+        // Función que se ejecuta cada vez que se hace clic en "Agregar Tarea"
+        function agregarTarea() {
+            contador++; // Incrementar el contador
+
+            // Obtener el contenedor de la lista
+            const lista = document.getElementById('lista-tareas');
+
+            // Crear un nuevo elemento <li>
+            const nuevaTarea = document.createElement('li');
+            nuevaTarea.textContent = 'Tarea ' + contador; // Texto inicial
+
+            // Evento para editar el nombre de la tarea al hacer doble clic
+            nuevaTarea.addEventListener('dblclick', function() {
+                editarTarea(nuevaTarea);
+            });
+
+            // Agregar el nuevo <li> al <ul>
+            lista.appendChild(nuevaTarea);
+
+            // Actualizar el contador en pantalla
+            document.getElementById('contador').textContent = contador;
+        }
+
+        // Función para editar el texto de una tarea
+        function editarTarea(elementoLi) {
+            // Guardar el texto actual
+            const textoActual = elementoLi.textContent;
+
+            // Crear un input temporal
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = textoActual;
+            input.classList.add('editando');
+
+            // Reemplazar el texto del li por el input
+            elementoLi.textContent = '';
+            elementoLi.appendChild(input);
+            input.focus();
+
+            // Al presionar Enter, guardar el nuevo texto
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    elementoLi.textContent = input.value;
+                    // Volver a permitir editar con doble clic
+                    elementoLi.addEventListener('dblclick', function() {
+                        editarTarea(elementoLi);
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
